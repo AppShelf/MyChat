@@ -1,6 +1,5 @@
 /*
  * MyChat TUI client/server application.
- * Posta sotto Controllo di versione: Git
  */
 
 package mychat;
