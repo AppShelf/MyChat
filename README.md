@@ -1,9 +1,17 @@
-MyChat
+
+My
+==
+
+Collezione di librerie e applicazioni
+
+my.net
 ======
 
-Client &amp; Server chatting system
+Libreria di classi dedicate alle applicazioni di rete
 
-La versione server parte specificando "server" come unico valore dato come parametro della linea comandi.
+mychat
+======
 
-La versione client chiede il nome o l'IP dell'host (server) al quale collegarsi.
+Applicazione MyChat, client di chat multiutente
+Applicazione MyChatServer, server di chat multiutente
 
