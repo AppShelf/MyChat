@@ -2,50 +2,57 @@ package my.net;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
 
-public class ChatClient extends Thread {
+public class ChatClient {
 
-    boolean isRunning;
-    String hostName;
+    private String nickName;
     private final int hostPort;
+    private final String hostName;
 
-    public ChatClient(String hostName, int hostPort) {
-        isRunning = true;
-        this.hostPort = hostPort;
-        this.hostName = hostName;
+    Socket socket = null;
+    Channel channel = null;
+    Receiver receiver = null;
+    
+    public ChatClient() {
+        nickName = Config.nick;
+        hostPort = Config.port;
+        hostName = Config.name;
+    }
+    
+    public void start() {
+        try {
+            socket = new Socket(hostName, hostPort);
+            channel = new Channel(socket);
+            receiver = new Receiver(channel);
+            receiver.start();
+            log("Client di chat avviato per " + nickName);
+        } catch (IOException ex) {
+            log("Errore di IO: " + ex.getMessage());
+        }
+    }
+    
+    public void stop() {
+        receiver.stopRunning();
+        channel.close();
     }
 
     private void log(String msg) {
         System.out.println(msg);
     }
     
-    @Override
-    public void run() {
-        Scanner lettore;
-        lettore = new Scanner(System.in);
-        System.out.print("Inserire un NICKNAME: ");
-        String nick = lettore.nextLine();
-        Socket socket;
-        try {
-            socket = new Socket(hostName, hostPort);
-            Channel channel = new Channel(socket);
-            Receiver receiver = new Receiver(channel);
-            receiver.start();
-            System.out.println("Client di chat avviato per " + nick);
-            while (isRunning) {
-                // System.out.print(nick + "> ");
-                String line = lettore.nextLine();
-                if (line.equalsIgnoreCase("quit")) {
-                    channel.writeLine(line);
-                    isRunning = false;
-                } else channel.writeLine(nick + "> " + line);
-            }
-            channel.close();
-            lettore.close();
-        } catch (IOException ex) {
-            log("Errore di IO: " + ex.getMessage());
-        }
+    public String getNickname() {
+        return nickName;
+    }
+    
+    public void setNickname(String nickName) {
+        this.nickName = nickName;
+    }
+    
+    public void post(String msg) {
+        if (msg.equalsIgnoreCase("quit")) {
+            channel.writeLine(msg);
+            stop();
+        } else channel.writeLine( nickName + "> " + msg );
     }
     
 }

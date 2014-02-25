@@ -4,35 +4,41 @@
 
 package mychat;
 
-import my.net.*;
+import java.io.IOException;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  *
  * @author Sandro
  */
-public class MyChat {
-
-    /**
-     * @param args the command line arguments
-     * args[0] = servername | <null>
-     * args[1] = serverport | <null>
-     */
+public class MyChat extends Application {
+    
+    Stage stage;
+    
     public static void main(String[] args) {
-        
-        int remoteport = Config.port;
-        String remotehost = "localhost";
+        launch(args);
+    }
 
-        if (args.length>0) {
-            remotehost = args[0];
+    @Override
+    public void start(Stage primaryStage) {
+        stage = primaryStage;
+        open("/my/net/view/chatview.fxml");
+    }
+    
+    void open( String fxml ) {
+        stage.setTitle("My Chat");
+        try {
+            Parent root = FXMLLoader.load( this.getClass().getResource( fxml ) );
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException ex) {
+            System.out.printf("FXML %s non trovato!\n[%s]\n", fxml, ex.getMessage());
         }
-        if (args.length>1) {
-            int n = Integer.parseInt(args[1]);
-            if (n>1024 && n<=65535) remoteport=n;
-        }
-        
-        ChatClient c = new ChatClient( remotehost, remoteport );
-        c.start();
-        
     }
     
 }

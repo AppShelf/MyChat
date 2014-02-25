@@ -4,6 +4,7 @@
 
 package mychat;
 
+import my.net.Config;
 import my.net.*;
 
 /**
