@@ -5,7 +5,7 @@
 package mychat;
 
 import my.net.Config;
-import my.net.*;
+import my.net.ChatServer;
 
 /**
  *
